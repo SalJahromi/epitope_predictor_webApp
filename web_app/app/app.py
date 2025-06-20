@@ -10,18 +10,40 @@ from bp3 import bepipred3
 from pathlib import Path
 import time
 
+
 app = Flask(__name__)
-app.secret_key = "123"  # <-- Required for sessions to work
+app.secret_key = "1233"  # <-- Required for sessions to work
 
 
 def parse(fasta_file):
-
     seq_list = []
     content = fasta_file.read().decode("utf-8")  # Convert bytes to string
     fasta_io = StringIO(content)
     for seq_record in SeqIO.parse(fasta_io, "fasta"):
         seq_list.append((seq_record.id, str(seq_record.seq)))
     return seq_list
+
+
+
+def analyze_scores(threshold):
+    df = pd.read_csv("example_output/raw_output.csv")
+    grouped = df.groupby("Accession")
+
+    result = []
+    for accession, group in grouped:
+        residues = []
+        for _, row in group.iterrows():
+            residues.append({
+                "residue": row["Residue"],
+                "score": row["BepiPred-3.0 score"]
+            })
+        result.append({
+            "accession": accession,
+            "residues": residues
+        })
+    return result
+
+
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -46,6 +68,7 @@ def index():
 
 
 
+
 @app.route("/predict_epitopes", methods=["POST"])
 def predict_epitopes():
     fasta_path = session.get("uploaded_fasta_path")
@@ -58,12 +81,11 @@ def predict_epitopes():
     out_dir = Path.cwd() / "example_output"
     MyBP3EnsemblePredict.create_csvfile(out_dir)
 
-    # sequences = parse(open(fasta_path, 'rb'))
-    # filename = Path(fasta_path).name
 
     time.sleep(2)  # simulate delay
-    # return "Prediction Complete!"
-    return "Prediction Complete!"
+    data = analyze_scores(0.15)
+    return jsonify(data)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
