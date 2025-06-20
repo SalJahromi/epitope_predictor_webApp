@@ -1,0 +1,66 @@
+h1{
+    padding-left:50px;
+    color:white;
+}
+.btn{
+    width: 85px;
+    height:50px;
+}
+
+.h2{
+    font-size: 25px;
+}
+.flex-main-container{
+    display:grid;
+    margin:50px;
+    padding: 5px;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 2rem;
+}
+
+
+.input-container{
+    padding: 10px;
+    border: 1px solid darkcyan;
+    height:150px;
+    border-radius: 5px;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    grid-column-start: 1;
+    grid-column-end: 2;
+}
+
+.uploaded-info{
+    padding: 10px;
+    max-height: 150px;         /* or any fixed height */
+    overflow-y: auto;          /* vertical scroll if needed */
+    border: 1px solid darkcyan;
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 1;
+}
+
+.epitope-predictions{
+    padding: 10px;
+    border: 1px solid darkcyan;
+    height:150px;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
+
+
+
+@media (max-width: 800px){
+    .flex-main-container{
+        display:flex;
+        flex-direction: column;
+        margin:50px;
+        padding: 5px;
+        gap: 2rem;
+    }
+}
+
